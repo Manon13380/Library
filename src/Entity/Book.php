@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Book
+class Book implements \Stringable
 {
     use Timestampable;
     
@@ -39,6 +39,11 @@ class Book
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     private ?array $genre = null;
+
+    public function __toString(): string
+    {
+        return $this->title;
+    }
 
     public static function setFilename(UploadedFile $photo): string
     {
