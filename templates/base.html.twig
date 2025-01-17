@@ -2,8 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Library{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
         {% block stylesheets %}
         {% endblock %}
 
@@ -11,7 +12,29 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="bg-gray-200">
+        <header class="bg-teal-600 shadow-lg">
+            <nav class="container mx-auto px-6 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="text-2xl font-bold text-white">
+                        Library
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="" class="px-4 py-2  text-white hover:text-gray-300 ">
+                            Inscription
+                        </a>
+                        <a href="" class="px-4 py-2 bg-rose-300 text-white rounded-lg hover:bg-rose-400 transition duration-300">
+                            Connexion
+                        </a>
+                        <a href="{{ path('admin') }}" class="px-4 py-2 bg-rose-300 text-white rounded-lg hover:bg-rose-400 transition duration-300">
+                            Admin
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main class="container mx-auto px-6 py-8">
+            {% block body %}{% endblock %}
+        </main>
     </body>
 </html>
