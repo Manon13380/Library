@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\GoogleBookApi;
 use App\Form\BookFormType;
+use App\Form\EditFormBookType;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -121,5 +122,34 @@ final class BookController extends AbstractController
             $entityManager->flush();
 
         return $this->redirectToRoute('homepage', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/book/{slug}/edit', name: 'bookEdit')]
+    public function edit(Request $request, String $slug, BookRepository $bookRepository, EntityManagerInterface $entityManager, Security $security): Response
+    {
+
+        $user = $security->getUser();
+
+        if ($user) {
+            $userRoles = $user->getRoles();
+        } else {
+            $userRoles = [];
+        }
+
+        $book = $bookRepository->findOneBy(['slug' => $slug]);
+        $form = $this->createForm(EditFormBookType::class, $book);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('homepage', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('book/editBook.html.twig', [
+            'book' => $book,
+            'form' => $form,
+            'roles' => $userRoles
+        ]);
     }
 }
