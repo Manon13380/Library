@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BookRepository;
 use App\Entity\Trait\Timestampable;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
@@ -40,9 +41,25 @@ class Book implements \Stringable
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     private ?array $genre = null;
 
+    #[ORM\ManyToOne(inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $userName = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $slug = null;
+
     public function __toString(): string
     {
         return $this->title;
+    }
+
+    public function computeSlug(SluggerInterface $slugger) : static
+    {
+        if (!$this->slug || '-' === $this->slug) {
+            $this->slug = (string) $slugger->slug((string) $this)->lower();
+        }
+
+        return $this;
     }
 
     public static function setFilename(UploadedFile $photo): string
@@ -135,6 +152,30 @@ class Book implements \Stringable
     public function setGenre(?array $genre): static
     {
         $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function getUserName(): ?user
+    {
+        return $this->userName;
+    }
+
+    public function setUserName(?user $userName): static
+    {
+        $this->userName = $userName;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

@@ -10,7 +10,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class BookCrudController extends AbstractCrudController
@@ -50,6 +49,10 @@ class BookCrudController extends AbstractCrudController
                 'years' => range(date('Y'), date('Y') + 5),
                 'widget' => 'single_text',
             ]);
+            yield TextField::new('userName')
+            ->onlyOnIndex();
+            yield TextField::new('slug')
+            ->onlyOnIndex();
 
 
         if (Crud::PAGE_EDIT === $pageName) {
